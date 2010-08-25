@@ -27,23 +27,24 @@
  * @category    Framework
  * @package     Opus_Validate
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
- * @copyright   Copyright (c) 2008, OPUS 4 development team
+ * @author      Thoralf Klein <thoralf.klein@zib.de>
+ * @copyright   Copyright (c) 2010, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
  * @version     $Id$
  */
 
 /**
- * Defines an validator for possible publication scope of notes.
+ * Defines an validator for possible publication visibility of notes.
  *
  * @category    Framework
  * @package     Opus_Validate
  */
-class Opus_Validate_NoteScope extends Opus_Validate_AbstractEnum {
+class Opus_Validate_NoteVisibility extends Opus_Validate_AbstractEnum {
     /**
      * Error message key.
      *
      */
-    const MSG_NOTESCOPE = 'notescope';
+    const MSG_NOTEVISIBILITY = 'notevisibility';
 
     /**
      * Error message templates.
@@ -51,7 +52,7 @@ class Opus_Validate_NoteScope extends Opus_Validate_AbstractEnum {
      * @var array
      */
     protected $_messageTemplates = array(
-        self::MSG_NOTESCOPE => "'%value%' is not a valid note visibility"
+        self::MSG_NOTEVISIBILITY => "'%value%' is not a valid note visibility"
     );
 
     /**
