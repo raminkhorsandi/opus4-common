@@ -35,13 +35,13 @@
 
 
 /**
- * Test cases for class Opus_Validate_NoteScope.
+ * Test cases for class Opus_Validate_NoteVisibility.
  *
  * @category    Tests
  * @package     Opus_Validate
  *
  */
-class Opus_Validate_NoteScopeTest extends TestCase {
+class Opus_Validate_NoteVisibilityTest extends TestCase {
 
     /**
      * Overwrite parent methods.
@@ -58,7 +58,6 @@ class Opus_Validate_NoteScopeTest extends TestCase {
         return array(
             array('private'),
             array('public'),
-            array('reference')
         );
     }
 
@@ -87,7 +86,7 @@ class Opus_Validate_NoteScopeTest extends TestCase {
      * @dataProvider validDataProvider
      */
     public function testValidArguments($arg) {
-        $validator = new Opus_Validate_NoteScope();
+        $validator = new Opus_Validate_NoteVisibility();
         $this->assertTrue($validator->isValid($arg), $arg . ' should pass validation.');
     }
 
@@ -100,7 +99,7 @@ class Opus_Validate_NoteScopeTest extends TestCase {
      * @dataProvider invalidDataProvider
      */
     public function testInvalidArguments($arg) {
-        $validator = new Opus_Validate_NoteScope();
+        $validator = new Opus_Validate_NoteVisibility();
         $this->assertFalse($validator->isValid($arg), 'Value should not pass validation.');
     }
 
