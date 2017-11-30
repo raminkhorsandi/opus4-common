@@ -1,5 +1,5 @@
 {
-  "name": "opus4-repo/common",
+  "name": "opus4-repo/opus4-common",
   "description": "OPUS 4 common library",
   "license": "GPL-2.0+",
   "type": "library",
