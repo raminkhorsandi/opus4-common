@@ -38,7 +38,7 @@ class Config
 
     public static function get()
     {
-        return Zend_Registry::get('Zend_Config');
+        return \Zend_Registry::get('Zend_Config');
     }
 
 }
