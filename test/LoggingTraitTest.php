@@ -7,12 +7,11 @@
  *
  * OPUS 4 is a complete rewrite of the original OPUS software and was developed
  * by the Stuttgart University Library, the Library Service Center
- * Baden-Wuerttemberg, the North Rhine-Westphalian Library Service Center,
- * the Cooperative Library Network Berlin-Brandenburg, the Saarland University
- * and State Library, the Saxon State Library - Dresden State and University
- * Library, the Bielefeld University Library and the University Library of
- * Hamburg University of Technology with funding from the German Research
- * Foundation and the European Regional Development Fund.
+ * Baden-Wuerttemberg, the Cooperative Library Network Berlin-Brandenburg,
+ * the Saarland University and State Library, the Saxon State Library -
+ * Dresden State and University Library, the Bielefeld University Library and
+ * the University Library of Hamburg University of Technology with funding from
+ * the German Research Foundation and the European Regional Development Fund.
  *
  * LICENCE
  * OPUS is free software; you can redistribute it and/or modify it under the
@@ -25,37 +24,49 @@
  * along with OPUS; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
- * @category    Tests
+ * @category    Test
+ * @package     Opus
  * @author      Jens Schwidder <schwidder@zib.de>
- * @copyright   Copyright (c) 2017, OPUS 4 development team
+ * @copyright   Copyright (c) 2018, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
  */
 
 namespace OpusTest;
 
-use PHPUnit_Framework_TestCase;
-use Zend_Config;
-use Zend_Registry;
-use Opus\Config;
+use Opus\LoggingTrait;
 
-class ConfigTest extends PHPUnit_Framework_TestCase
+class LoggingTraitTest extends \PHPUnit_Framework_TestCase
 {
 
-    private $_config;
+    private $logger;
 
     public function setUp()
     {
-        $this->_config = new Zend_Config(array());
+        $log = new \Zend_Log();
 
-        Zend_Registry::set('Zend_Config', $this->_config);
+        \Zend_Registry::set('Zend_Log', $log);
+        $this->logger = $log;
     }
 
-    public function testGet()
+    public function testGetLogger()
     {
-        $config = Config::get();
+        $mock = $this->getMockForTrait(LoggingTrait::class);
 
-        $this->assertNotNull($config);
-        $this->assertSame($this->_config, $config);
+        $this->assertSame($this->logger, $mock->getLogger());
     }
 
+    public function testSetLogger()
+    {
+        $mock = $this->getMockForTrait(LoggingTrait::class);
+
+        $newLog = new \Zend_Log();
+
+        $mock->setLogger($newLog);
+
+        $this->assertSame($newLog, $mock->getLogger());
+
+        $mock->setLogger(null);
+
+        $this->assertSame($this->logger, $mock->getLogger());
+    }
 }
