@@ -5,8 +5,10 @@ pipeline {
 
     stages {
         stage('prepare') {
-            sh 'composer install'
-            sh 'composer update'
+            steps {
+                sh 'composer install'
+                sh 'composer update'
+            }
         }
 
         stage('build') {
