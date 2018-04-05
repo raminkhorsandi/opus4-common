@@ -28,11 +28,14 @@
  * @package     Opus_Validate
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
  * @author      Thoralf Klein <thoralf.klein@zib.de>
- * @copyright   Copyright (c) 2008-2010, OPUS 4 development team
+ * @author      Jens Schwidder <schwidder@zib.de>
+ * @copyright   Copyright (c) 2008-2018, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
- * @version     $Id$
  */
 
+namespace OpusTest\Validate;
+
+use Opus\Validate\DocumentType;
 
 /**
  * Test cases for class Opus_Validate_DocumentType.
@@ -41,27 +44,23 @@
  * @package     Opus_Validate
  *
  */
-class Opus_Validate_DocumentTypeTest extends TestCase {
-
-    /**
-     * Overwrite parent methods.
-     */
-    public function setUp() {}
-    public function tearDown() {}
+class DocumentTypeTest extends \PHPUnit_Framework_TestCase
+{
 
     /**
      * Data provider for valid arguments.
      *
      * @return array Array of invalid arguments.
      */
-    public function validDataProvider() {
-        return array(
-            array('article'),
-            array('book section'),
-            array('monograph'),
-            array('report'),
-            array('doctoral thesis')
-        );
+    public function validDataProvider()
+    {
+        return [
+            ['article'],
+            ['book section'],
+            ['monograph'],
+            ['report'],
+            ['doctoral thesis']
+        ];
     }
 
     /**
@@ -69,14 +68,15 @@ class Opus_Validate_DocumentTypeTest extends TestCase {
      *
      * @return array Array of invalid arguments.
      */
-    public function invalidDataProvider() {
-        return array(
-            array(null),
-            array(''),
-            array(4711),
-            array(true),
-            array('not_a_valid_type')
-        );
+    public function invalidDataProvider()
+    {
+        return [
+            [null],
+            [''],
+            [4711],
+            [true],
+            ['not_a_valid_type']
+        ];
     }
 
 
@@ -88,8 +88,9 @@ class Opus_Validate_DocumentTypeTest extends TestCase {
      *
      * @dataProvider validDataProvider
      */
-    public function testValidArguments($arg) {
-        $validator = new Opus_Validate_DocumentType();
+    public function testValidArguments($arg)
+    {
+        $validator = new DocumentType();
         $this->assertTrue($validator->isValid($arg), $arg . ' should pass validation.');
     }
 
@@ -101,9 +102,9 @@ class Opus_Validate_DocumentTypeTest extends TestCase {
      *
      * @dataProvider invalidDataProvider
      */
-    public function testInvalidArguments($arg) {
-        $validator = new Opus_Validate_DocumentType();
+    public function testInvalidArguments($arg)
+    {
+        $validator = new DocumentType();
         $this->assertFalse($validator->isValid($arg), 'Value should not pass validation.');
     }
-
 }

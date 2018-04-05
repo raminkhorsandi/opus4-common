@@ -28,43 +28,42 @@
  * @package     Opus_Validate
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
  * @author      Thoralf Klein <thoralf.klein@zib.de>
- * @copyright   Copyright (c) 2008-2010, OPUS 4 development team
+ * @author      Jens Schwidder <schwidder@zib.de>
+ * @copyright   Copyright (c) 2008-2018, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
- * @version     $Id$
  */
 
+namespace OpusTest\Validate;
+
+use Opus\Validate\Isbn13;
 
 /**
  * Test cases for class Opus_Validate_Isbn13.
  *
  * @category    Tests
  * @package     Opus_Validate
- * 
+ *
  * @group       Isbn13Test
  *
  */
-class Opus_Validate_Isbn13Test extends TestCase {
-
-    /**
-     * Overwrite parent methods.
-     */
-    public function setUp() {}
-    public function tearDown() {}
+class Isbn13Test extends \PHPUnit_Framework_TestCase
+{
 
     /**
      * Data provider for valid arguments.
      *
      * @return array Array of invalid arguments.
      */
-    public function validDataProvider() {
-        return array(
-            array('978-3-86680-192-9'),
-            array('978-5-7931-8163-1'),
-            array('978-979-3182-63-6'),
-            array('978 3 86680 192 9'),
-            array('978 5 7931 8163 1'),
-            array('978 979 3182 63 6'),
-        );
+    public function validDataProvider()
+    {
+        return [
+            ['978-3-86680-192-9'],
+            ['978-5-7931-8163-1'],
+            ['978-979-3182-63-6'],
+            ['978 3 86680 192 9'],
+            ['978 5 7931 8163 1'],
+            ['978 979 3182 63 6'],
+        ];
     }
 
     /**
@@ -72,17 +71,18 @@ class Opus_Validate_Isbn13Test extends TestCase {
      *
      * @return array Array of invalid arguments and a message.
      */
-    public function invalidDataProvider() {
-        return array(
-            array(null, 'Null value not rejected'),
-            array('',   'Empty string not rejected'),
-            array(4711, 'Integer not rejected'),
-            array(true, 'Boolean not rejected'),
-            array('4711-0815',          'Malformed string not rejected.'),
-            array('980-3-86680-192-9',  'Wrong prefix not rejected.'),
-            array('978-3-86680-192-5', 'Wrong check digit not rejected.'),
-            array('978 3 86680-192-9', 'Mixed separators not rejected.')
-        );
+    public function invalidDataProvider()
+    {
+        return [
+            [null, 'Null value not rejected'],
+            ['', 'Empty string not rejected'],
+            [4711, 'Integer not rejected'],
+            [true, 'Boolean not rejected'],
+            ['4711-0815', 'Malformed string not rejected.'],
+            ['980-3-86680-192-9', 'Wrong prefix not rejected.'],
+            ['978-3-86680-192-5', 'Wrong check digit not rejected.'],
+            ['978 3 86680-192-9', 'Mixed separators not rejected.']
+        ];
     }
 
 
@@ -94,17 +94,18 @@ class Opus_Validate_Isbn13Test extends TestCase {
      *
      * @dataProvider validDataProvider
      */
-    public function testValidArguments($arg) {
-        $validator = new Opus_Validate_Isbn13();
+    public function testValidArguments($arg)
+    {
+        $validator = new Isbn13();
         $result = $validator->isValid($arg);
-        
+
         $codes = $validator->getErrors();
         $msgs  = $validator->getMessages();
         $err   = '';
         foreach ($codes as $code) {
             $err .= '(' . $msgs[$code] . ') ';
         }
-        
+
         $this->assertTrue($result, $arg . ' should pass validation but validator says: ' . $err);
     }
 
@@ -117,9 +118,9 @@ class Opus_Validate_Isbn13Test extends TestCase {
      *
      * @dataProvider invalidDataProvider
      */
-    public function testInvalidArguments($arg, $msg) {
-        $validator = new Opus_Validate_Isbn13();
+    public function testInvalidArguments($arg, $msg)
+    {
+        $validator = new Isbn13();
         $this->assertFalse($validator->isValid($arg), $msg);
     }
-
 }

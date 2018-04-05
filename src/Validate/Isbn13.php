@@ -27,10 +27,12 @@
  * @category    Framework
  * @package     Opus_Validate
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
- * @copyright   Copyright (c) 2008, OPUS 4 development team
+ * @author      Jens Schwidder <schwidder@zib.de>
+ * @copyright   Copyright (c) 2008-2018, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
- * @version     $Id$
  */
+
+namespace Opus\Validate;
 
 /**
  * Defines an validator for ISBN-13 numbers.
@@ -38,7 +40,8 @@
  * @category    Framework
  * @package     Opus_Validate
  */
-class Opus_Validate_Isbn13 extends Zend_Validate_Abstract {
+class Isbn13 extends \Zend_Validate_Abstract
+{
 
     /**
      * Error message key for invalid check digit.
@@ -58,10 +61,10 @@ class Opus_Validate_Isbn13 extends Zend_Validate_Abstract {
      *
      * @var array
      */
-    protected $_messageTemplates = array(
-    self::MSG_CHECK_DIGIT => "The check digit of '%value%' is not valid",
-    self::MSG_FORM => "'%value%' is malformed"
-    );
+    protected $_messageTemplates = [
+        self::MSG_CHECK_DIGIT => "The check digit of '%value%' is not valid",
+        self::MSG_FORM => "'%value%' is malformed"
+    ];
 
     /**
      * Validate the given ISBN-13 string.
@@ -74,7 +77,7 @@ class Opus_Validate_Isbn13 extends Zend_Validate_Abstract {
         $this->_setValue($value);
 
         // check lenght
-        if (strlen($value) !== (13+4)) {
+        if (strlen($value) !== (13 + 4)) {
             $this->_error(self::MSG_FORM);
             return false;
         }
@@ -95,8 +98,8 @@ class Opus_Validate_Isbn13 extends Zend_Validate_Abstract {
         $isbn_parts = preg_split('/(-|\s)/', $value);
 
         // Separate digits for checkdigit calculation
-        $digits = array();
-        for ($i=0; $i<4; $i++) {
+        $digits = [];
+        for ($i = 0; $i < 4; $i++) {
             foreach (str_split($isbn_parts[$i]) as $digit) {
                 $digits[] = $digit;
             }
@@ -118,10 +121,11 @@ class Opus_Validate_Isbn13 extends Zend_Validate_Abstract {
      * @param array $digits Array of digits that form ISBN.
      * @return string The check digit.
      */
-    protected function calculateCheckDigit(array $digits) {
+    protected function calculateCheckDigit(array $digits)
+    {
         $z = $digits;
-        $z[12] = ((10 - (($z[0]+$z[2]+$z[4]+$z[6]+$z[8]+$z[10]+(3*($z[1]+$z[3]+$z[5]+$z[7]+$z[9]+$z[11]))) % 10)) % 10);
+        $z[12] = ((10 - (($z[0] + $z[2] + $z[4] + $z[6] + $z[8] + $z[10] + (3 * ($z[1] + $z[3] + $z[5] + $z[7] +
+                                $z[9] + $z[11]))) % 10)) % 10);
         return "$z[12]";
     }
-
 }

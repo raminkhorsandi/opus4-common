@@ -27,18 +27,23 @@
  * @category    Framework
  * @package     Opus_Validate
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
- * @copyright   Copyright (c) 2008, OPUS 4 development team
+ * @author      Jens Schwidder <schwidder@zib.de>
+ * @copyright   Copyright (c) 2008-2018, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
- * @version     $Id$
  */
+
+namespace Opus\Validate;
 
 /**
  * Defines an validator for possible document type names.
  *
  * @category    Framework
  * @package     Opus_Validate
+ *
+ * TODO not used and out of date
  */
-class Opus_Validate_DocumentType extends Opus_Validate_AbstractEnum {
+class DocumentType extends AbstractEnum
+{
 
     /**
      * Error message key.
@@ -51,15 +56,16 @@ class Opus_Validate_DocumentType extends Opus_Validate_AbstractEnum {
      *
      * @var array
      */
-    protected $_messageTemplates = array(
+    // phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore
+    protected $_messageTemplates = [
         self::MSG_DOCUMENTTYPE => "'%value%' is not a valid document type"
-    );
+    ];
+    // phpcs:enable
 
     /**
      * Define valid enum values.
      *
      * @var array
      */
-    protected $_valid_enums = array('article', 'book section', 'monograph', 'report', 'doctoral thesis');
-
+    protected $validEnums = ['article', 'book section', 'monograph', 'report', 'doctoral thesis'];
 }

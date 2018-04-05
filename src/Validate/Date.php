@@ -27,10 +27,12 @@
  * @category    Framework
  * @package     Opus_Validate
  * @author      Henning Gerhardt (henning.gerhardt@slub-dresden.de)
- * @copyright   Copyright (c) 2008, OPUS 4 development team
+ * @author      Jens Schwidder <schwidder@zib.de>
+ * @copyright   Copyright (c) 2008-2018, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
- * @version     $Id$
  */
+
+namespace Opus\Validate;
 
 /**
  * Validator for date fields.
@@ -38,15 +40,15 @@
  * @category    Framework
  * @package     Opus_Validate
  */
-
-class Opus_Validate_Date extends Zend_Validate_Date {
+class Date extends \Zend_Validate_Date
+{
 
     /**
      * Set necessary locale information for validating.
      *
      */
-    public function __construct() {
-        parent::__construct(Zend_Date::DATE_MEDIUM, 'de');
+    public function __construct()
+    {
+        parent::__construct(\Zend_Date::DATE_MEDIUM, 'de');
     }
-
 }

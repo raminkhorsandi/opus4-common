@@ -28,47 +28,46 @@
  * @package     Opus_Validate
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
  * @author      Thoralf Klein <thoralf.klein@zib.de>
- * @copyright   Copyright (c) 2008-2010, OPUS 4 development team
+ * @author      Jens Schwidder <schwidder@zib.de>
+ * @copyright   Copyright (c) 2008-2018, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
- * @version     $Id$
  */
 
+namespace OpusTest\Validate;
+
+use Opus\Validate\Isbn;
 
 /**
  * Test cases for class Opus_Validate_Isbn.
  *
  * @category    Tests
  * @package     Opus_Validate
- * 
+ *
  * @group       IsbnTest
  *
  */
-class Opus_Validate_IsbnTest extends TestCase {
-
-    /**
-     * Overwrite parent methods.
-     */
-    public function setUp() {}
-    public function tearDown() {}
+class IsbnTest extends \PHPUnit_Framework_TestCase
+{
 
     /**
      * Data provider for valid arguments.
      *
      * @return array Array of invalid arguments.
      */
-    public function validDataProvider() {
-        return array(
-            array('978-3-86680-192-9'),
-            array('978-5-7931-8163-1'),
-            array('978-979-3182-63-6'),
-            array('978 3 86680 192 9'),
-            array('978 5 7931 8163 1'),
-            array('978 979 3182 63 6'),
-            array('3-86680-192-0'),
-            array('3-937602-69-0'),
-            array('3 86680 192 0'),
-            array('3 937602 69 0')
-        );
+    public function validDataProvider()
+    {
+        return [
+            ['978-3-86680-192-9'],
+            ['978-5-7931-8163-1'],
+            ['978-979-3182-63-6'],
+            ['978 3 86680 192 9'],
+            ['978 5 7931 8163 1'],
+            ['978 979 3182 63 6'],
+            ['3-86680-192-0'],
+            ['3-937602-69-0'],
+            ['3 86680 192 0'],
+            ['3 937602 69 0']
+        ];
     }
 
     /**
@@ -76,21 +75,21 @@ class Opus_Validate_IsbnTest extends TestCase {
      *
      * @return array Array of invalid arguments and a message.
      */
-    public function invalidDataProvider() {
-        return array(
-            array(null, 'Null value not rejected'),
-            array('',   'Empty string not rejected'),
-            array(4711, 'Integer not rejected'),
-            array(true, 'Boolean not rejected'),
-            array('4711-0815',          'Malformed string not rejected.'),
-            array('980-3-86680-192-9',  'Wrong prefix not rejected.'),
-            array('978-3-86680-192-5', 'Wrong check digit not rejected.'),
-            array('978 3 86680-192-9', 'Mixed separators not rejected.'),
-            array('3-86680-192-5',      'Wrong check digit not rejected.'),
-            array('3 86680 192-0',      'Mixed separators not rejected.')
-        );
+    public function invalidDataProvider()
+    {
+        return [
+            [null, 'Null value not rejected'],
+            ['', 'Empty string not rejected'],
+            [4711, 'Integer not rejected'],
+            [true, 'Boolean not rejected'],
+            ['4711-0815', 'Malformed string not rejected.'],
+            ['980-3-86680-192-9', 'Wrong prefix not rejected.'],
+            ['978-3-86680-192-5', 'Wrong check digit not rejected.'],
+            ['978 3 86680-192-9', 'Mixed separators not rejected.'],
+            ['3-86680-192-5', 'Wrong check digit not rejected.'],
+            ['3 86680 192-0', 'Mixed separators not rejected.']
+        ];
     }
-
 
     /**
      * Test validation of correct arguments.
@@ -100,17 +99,18 @@ class Opus_Validate_IsbnTest extends TestCase {
      *
      * @dataProvider validDataProvider
      */
-    public function testValidArguments($arg) {
-        $validator = new Opus_Validate_Isbn();
+    public function testValidArguments($arg)
+    {
+        $validator = new Isbn();
         $result = $validator->isValid($arg);
-        
+
         $codes = $validator->getErrors();
         $msgs  = $validator->getMessages();
         $err   = '';
         foreach ($codes as $code) {
             $err .= '(' . $msgs[$code] . ') ';
         }
-        
+
         $this->assertTrue($result, $arg . ' should pass validation but validator says: ' . $err);
     }
 
@@ -123,9 +123,9 @@ class Opus_Validate_IsbnTest extends TestCase {
      *
      * @dataProvider invalidDataProvider
      */
-    public function testInvalidArguments($arg, $msg) {
-        $validator = new Opus_Validate_Isbn();
+    public function testInvalidArguments($arg, $msg)
+    {
+        $validator = new Isbn();
         $this->assertFalse($validator->isValid($arg), $msg);
     }
-
 }

@@ -28,11 +28,14 @@
  * @package     Opus_Validate
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
  * @author      Thoralf Klein <thoralf.klein@zib.de>
- * @copyright   Copyright (c) 2008-2010, OPUS 4 development team
+ * @author      Jens Schwidder <schwidder@zib.de>
+ * @copyright   Copyright (c) 2008-2018, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
- * @version     $Id$
  */
 
+namespace OpusTest\Validate;
+
+use Opus\Validate\ReviewType;
 
 /**
  * Test cases for class Opus_Validate_ReviewType.
@@ -41,25 +44,21 @@
  * @package     Opus_Validate
  *
  */
-class Opus_Validate_ReviewTypeTest extends TestCase {
-
-    /**
-     * Overwrite parent methods.
-     */
-    public function setUp() {}
-    public function tearDown() {}
+class ReviewTypeTest extends \PHPUnit_Framework_TestCase
+{
 
     /**
      * Data provider for valid arguments.
      *
      * @return array Array of invalid arguments.
      */
-    public function validDataProvider() {
-        return array(
-            array('peer'),
-            array('editorial'),
-            array('open')
-        );
+    public function validDataProvider()
+    {
+        return [
+            ['peer'],
+            ['editorial'],
+            ['open']
+        ];
     }
 
     /**
@@ -67,16 +66,16 @@ class Opus_Validate_ReviewTypeTest extends TestCase {
      *
      * @return array Array of invalid arguments.
      */
-    public function invalidDataProvider() {
-        return array(
-            array(null),
-            array(''),
-            array(4711),
-            array(true),
-            array('not_a_valid_type')
-        );
+    public function invalidDataProvider()
+    {
+        return [
+            [null],
+            [''],
+            [4711],
+            [true],
+            ['not_a_valid_type']
+        ];
     }
-
 
     /**
      * Test validation of correct arguments.
@@ -86,8 +85,9 @@ class Opus_Validate_ReviewTypeTest extends TestCase {
      *
      * @dataProvider validDataProvider
      */
-    public function testValidArguments($arg) {
-        $validator = new Opus_Validate_ReviewType();
+    public function testValidArguments($arg)
+    {
+        $validator = new ReviewType();
         $this->assertTrue($validator->isValid($arg), $arg . ' should pass validation.');
     }
 
@@ -99,9 +99,9 @@ class Opus_Validate_ReviewTypeTest extends TestCase {
      *
      * @dataProvider invalidDataProvider
      */
-    public function testInvalidArguments($arg) {
-        $validator = new Opus_Validate_ReviewType();
+    public function testInvalidArguments($arg)
+    {
+        $validator = new ReviewType();
         $this->assertFalse($validator->isValid($arg), 'Value should not pass validation.');
     }
-
 }

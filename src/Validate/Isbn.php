@@ -27,10 +27,12 @@
  * @category    Framework
  * @package     Opus_Validate
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
- * @copyright   Copyright (c) 2008, OPUS 4 development team
+ * @author      Jens Schwidder <schwidder@zib.de>
+ * @copyright   Copyright (c) 2008-2018, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
- * @version     $Id$
  */
+
+namespace Opus\Validate;
 
 /**
  * Validator for Isbn field.
@@ -38,8 +40,9 @@
  * @category    Framework
  * @package     Opus_Validate
  */
-class Opus_Validate_Isbn extends Zend_Validate_Abstract {
-    
+class Isbn extends \Zend_Validate_Abstract
+{
+
     /**
      * Error message key for invalid check digit.
      *
@@ -52,17 +55,17 @@ class Opus_Validate_Isbn extends Zend_Validate_Abstract {
      *
      */
     const MSG_FORM = 'form';
-    
+
     /**
      * Error message templates.
      *
      * @var array
      */
-    protected $_messageTemplates = array(
+    protected $_messageTemplates = [
         self::MSG_CHECK_DIGIT => "The check digit of '%value%' is not valid",
         self::MSG_FORM => "'%value%' is malformed"
-    );
-    
+    ];
+
     /**
      * Validate the given ISBN string using ISBN-10 or ISBN-13 validators respectivly.
      *
@@ -72,16 +75,16 @@ class Opus_Validate_Isbn extends Zend_Validate_Abstract {
     public function isValid($value)
     {
         $this->_setValue($value);
-        
+
         $len = strlen($value);
         $isbn_validator = null;
         switch ($len) {
-            case 10+3:
-                $isbn_validator = new Opus_Validate_Isbn10();
+            case 10 + 3:
+                $isbn_validator = new Isbn10();
                 $result = $isbn_validator->isValid($value);
                 break;
-            case 13+4:
-                $isbn_validator = new Opus_Validate_Isbn13();
+            case 13 + 4:
+                $isbn_validator = new Isbn13();
                 $result = $isbn_validator->isValid($value);
                 break;
             default:
@@ -94,9 +97,7 @@ class Opus_Validate_Isbn extends Zend_Validate_Abstract {
                 $this->_error($error);
             }
         }
-        
-        return $result;
 
+        return $result;
     }
-    
 }

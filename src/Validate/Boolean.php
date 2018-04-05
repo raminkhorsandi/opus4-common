@@ -27,10 +27,12 @@
  * @category    Framework
  * @package     Opus_Validate
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
- * @copyright   Copyright (c) 2008, OPUS 4 development team
+ * @author      Jens Schwidder <schwidder@zib.de>
+ * @copyright   Copyright (c) 2008-2018, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
- * @version     $Id$
  */
+
+namespace Opus\Validate;
 
 /**
  * Defines an validator for boolean values.
@@ -38,7 +40,8 @@
  * @category    Framework
  * @package     Opus_Validate
  */
-class Opus_Validate_Boolean extends Zend_Validate_Abstract {
+class Boolean extends \Zend_Validate_Abstract
+{
 
     /**
      * Error message key for invalid type.
@@ -51,9 +54,9 @@ class Opus_Validate_Boolean extends Zend_Validate_Abstract {
      *
      * @var array
      */
-    protected $_messageTemplates = array(
+    protected $_messageTemplates = [
         self::MSG_TYPE => "'%value%' is not of type boolean",
-    );
+    ];
 
     /**
      * Validate the given boolean value.
@@ -72,5 +75,4 @@ class Opus_Validate_Boolean extends Zend_Validate_Abstract {
 
         return true;
     }
-
 }

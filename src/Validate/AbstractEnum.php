@@ -27,20 +27,25 @@
  * @category    Framework
  * @package     Opus_Validate
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
- * @copyright   Copyright (c) 2008, OPUS 4 development team
+ * @author      Jens Schwidder <schwidder@zib.de>
+ * @copyright   Copyright (c) 2008-2018, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
- * @version     $Id$
  */
+
+namespace Opus\Validate;
 
 /**
  * Defines an validator for possible enum values. Classes based on this
  * abstract class have to define a protected variable $_valid_enums of
  * type array.
  *
- * @category    Framework
- * @package     Opus_Validate
+ * @category    Common
+ * @package     \Opus\Validate
  */
-abstract class Opus_Validate_AbstractEnum extends Zend_Validate_Abstract {
+abstract class AbstractEnum extends \Zend_Validate_Abstract
+{
+
+    protected $validEnums = [];
 
     /**
      * Validate the given value.
@@ -52,12 +57,11 @@ abstract class Opus_Validate_AbstractEnum extends Zend_Validate_Abstract {
     {
         $this->_setValue($value);
 
-        if (array_search($value, $this->_valid_enums, true) === false) {
+        if (array_search($value, $this->validEnums, true) === false) {
             $this->_error("Invalid enum value '$value'");
             return false;
         }
 
         return true;
     }
-
 }

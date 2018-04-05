@@ -27,10 +27,12 @@
  * @category    Framework
  * @package     Opus_Validate
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
- * @copyright   Copyright (c) 2008, OPUS 4 development team
+ * @author      Jens Schwidder <schwidder@zib.de>
+ * @copyright   Copyright (c) 2008-2018, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
- * @version     $Id$
  */
+
+namespace Opus\Validate;
 
 /**
  * Defines an validator for available review type names.
@@ -38,7 +40,9 @@
  * @category    Framework
  * @package     Opus_Validate
  */
-class Opus_Validate_ReviewType extends Opus_Validate_AbstractEnum {
+class ReviewType extends AbstractEnum
+{
+
     /**
      * Error message key.
      *
@@ -50,14 +54,14 @@ class Opus_Validate_ReviewType extends Opus_Validate_AbstractEnum {
      *
      * @var array
      */
-    protected $_messageTemplates = array(
+    protected $_messageTemplates = [
         self::MSG_REVIEWTYPE => "'%value%' is not a valid review type"
-    );
+    ];
 
     /**
      * Define valid enum values.
      *
      * @var array
      */
-    protected $_valid_enums = array('peer','editorial','open');
+    protected $validEnums = ['peer','editorial','open'];
 }
