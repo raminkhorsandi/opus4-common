@@ -5,13 +5,21 @@ pipeline {
 
     stages {
         stage('prepare') {
-            composer install
-            composer update
+            sh 'composer install'
+            sh 'composer update'
         }
 
         stage('build') {
             steps {
-                composer check
+                sh 'composer check'
+            }
+        }
+
+        stage('publish') {
+            steps {
+                echo 'TODO publish test results'
+                echo 'TODO publish checkstyle result'
+                echo 'TODO publish coverage'
             }
         }
     }
