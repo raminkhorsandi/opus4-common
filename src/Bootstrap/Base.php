@@ -51,7 +51,7 @@ class Base extends \Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initBackend()
     {
-        $this->bootstrap(array('ZendCache', 'OpusLocale', 'Database', 'Logging'));
+        $this->bootstrap(['ZendCache', 'OpusLocale', 'Database', 'Logging']);
     }
 
     /**
@@ -76,16 +76,16 @@ class Base extends \Zend_Application_Bootstrap_Bootstrap
         $this->bootstrap('Configuration');
         $config = $this->getResource('Configuration');
 
-        $frontendOptions = array(
+        $frontendOptions = [
             'lifetime' => 600, // in seconds
             'automatic_serialization' => true,
-        );
+        ];
 
-        $backendOptions = array(
+        $backendOptions = [
             // Directory where to put the cache files. Must be writeable for
             // application server
             'cache_dir' => $config->workspacePath . '/cache/'
-        );
+        ];
 
         $cache = \Zend_Cache::factory('Core', 'File', $frontendOptions, $backendOptions);
 
@@ -134,14 +134,12 @@ class Base extends \Zend_Application_Bootstrap_Bootstrap
         $config = $this->getResource('Configuration');
 
         // Detect if running in CGI environment.
-        if (isset($config->log->filename))
-        {
+        if (isset($config->log->filename)) {
             $logFilename = $config->log->filename;
-        }
-        else
-        {
+        } else {
             $logFilename = 'opus.log';
-            if (!array_key_exists('SERVER_PROTOCOL', $_SERVER) and !array_key_exists('REQUEST_METHOD', $_SERVER)) {
+            if (! array_key_exists('SERVER_PROTOCOL', $_SERVER)
+                and ! array_key_exists('REQUEST_METHOD', $_SERVER)) {
                 $logFilename = "opus-console.log";
             }
         }
@@ -150,13 +148,12 @@ class Base extends \Zend_Application_Bootstrap_Bootstrap
 
         $logfile = @fopen($logfilePath, 'a', false);
 
-        if ( $logfile === false ) {
+        if ($logfile === false) {
             $path = dirname($logfilePath);
 
-            if (!is_dir($path)) {
+            if (! is_dir($path)) {
                 throw new Exception('Directory for logging does not exist');
-            }
-            else {
+            } else {
                 throw new Exception('Failed to open logging file:' . $logfilePath);
             }
         }
@@ -175,8 +172,7 @@ class Base extends \Zend_Application_Bootstrap_Bootstrap
 
         if (isset($config->log->level)) {
             $logLevelName = strtoupper($config->log->level);
-        }
-        else {
+        } else {
             $logLevelNotConfigured = true;
         }
 
