@@ -63,4 +63,15 @@ trait LoggingTrait
     {
         $this->logger = $logger;
     }
+
+    /**
+     *  Debugging helper.  Sends the given message to Zend_Log.
+     *
+     * @param string $message
+     */
+    protected function log($message)
+    {
+        $logger = $this->getLogger();
+        $logger->info(__CLASS__ . ": $message");
+    }
 }
