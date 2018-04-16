@@ -91,9 +91,10 @@ interface XmlCacheInterface
      * @param $documentId
      * @param $xmlVersion
      * @param $serverDateModified
+     * @param $xmlData
      * @return mixed
      */
-    public function put($documentId, $xmlVersion, $serverDateModified);
+    public function put($documentId, $xmlVersion, $serverDateModified, $xmlData);
 
     /**
      * Removes document entries from cache.
