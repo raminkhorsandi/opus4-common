@@ -52,7 +52,7 @@ interface XmlCacheInterface
      * @param $xmlVersion
      * @return null|\DOMDocument
      */
-    function get($documentId, $xmlVersion);
+    public function get($documentId, $xmlVersion);
 
     /**
      * Returns XML for document from cache.
@@ -61,13 +61,13 @@ interface XmlCacheInterface
      * @param $xmlVersion
      * @return mixed
      */
-    function getData($documentId, $xmlVersion);
+    public function getData($documentId, $xmlVersion);
 
     /**
      * Returns entire cache as array.
      * @return mixed
      */
-    function getAllEntries();
+    public function getAllEntries();
 
     /**
      * Check if cache has entry for document and format.
@@ -75,7 +75,7 @@ interface XmlCacheInterface
      * @param $xmlVersion
      * @return mixed
      */
-    function hasCacheEntry($documentId, $xmlVersion);
+    public function hasCacheEntry($documentId, $xmlVersion);
 
     /**
      * Check if cache has current entry for document and format.
@@ -84,7 +84,7 @@ interface XmlCacheInterface
      * @param $serverDateModified
      * @return mixed
      */
-    function hasValidEntry($documentId, $xmlVersion, $serverDateModified);
+    public function hasValidEntry($documentId, $xmlVersion, $serverDateModified);
 
     /**
      * Puts document XML into cache.
@@ -93,7 +93,7 @@ interface XmlCacheInterface
      * @param $serverDateModified
      * @return mixed
      */
-    function put($documentId, $xmlVersion, $serverDateModified);
+    public function put($documentId, $xmlVersion, $serverDateModified);
 
     /**
      * Removes document entries from cache.
@@ -101,12 +101,12 @@ interface XmlCacheInterface
      * @param null $xmlVersion
      * @return mixed
      */
-    function remove($documentId, $xmlVersion = null);
+    public function remove($documentId, $xmlVersion = null);
 
     /**
      * Removes all entries from cache.
      */
-    function clear();
+    public function clear();
 
     /**
      * @param $select
@@ -114,12 +114,12 @@ interface XmlCacheInterface
      *
      * TODO database dependent - move out of interface and implementation
      */
-    function removeAllEntriesWhereSubSelect($select);
+    public function removeAllEntriesWhereSubSelect($select);
 
     /**
      * @return mixed
      *
      * TODO database dependent - move out of interface and implementation
      */
-    function removeAllEntriesForDependentModel($model);
+    public function removeAllEntriesForDependentModel($model);
 }
