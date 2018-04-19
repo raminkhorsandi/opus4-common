@@ -34,7 +34,7 @@
       "@test-coverage"
     ],
     "test": "phpunit --colors=always",
-    "test-coverage": "phpunit --colors=always --coverage-clover build/clover.xml --coverage-html build/ .",
+    "test-coverage": "phpunit --colors=always --coverage-html build/ --coverage-clover build/clover.xml",
     "cs-check": "phpcs -n",
     "cs-fix": "phpcbf"
   }
