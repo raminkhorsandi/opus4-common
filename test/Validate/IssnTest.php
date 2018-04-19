@@ -37,8 +37,8 @@ namespace OpusTest\Validate;
 use Opus\Validate\Issn;
 
 /**
- * Unittests for Opus_Validate_Issn.
- * @coversDefaultClass Opus_Validate_Issn
+ * Unit tests for Opus\Validate\Issn.
+ * @coversDefaultClass \Opus\Validate\Issn
  */
 class IssnTest extends \PHPUnit_Framework_TestCase
 {
@@ -95,7 +95,7 @@ class IssnTest extends \PHPUnit_Framework_TestCase
     /**
      * Unittest for isValid with valid Arguments.
      * @covers ::isValid
-     * @covers ::_calculateCheckDigit
+     * @covers ::calculateCheckDigit
      * @dataProvider validIssnProvider
      */
     public function testValidArguments($arg)
@@ -107,7 +107,7 @@ class IssnTest extends \PHPUnit_Framework_TestCase
     /**
      * Unittest for isValid with invalid Arguments.
      * @covers ::isValid
-     * @covers ::_calculateCheckDigit
+     * @covers ::calculateCheckDigit
      * @dataProvider invalidIssnProvider
      */
     public function testInvalidArguments($arg)
@@ -119,7 +119,7 @@ class IssnTest extends \PHPUnit_Framework_TestCase
     /**
      * Unittest to check the error-messages for an invalid ISSN.
      * @covers ::isValid
-     * @covers ::_calculateCheckDigit
+     * @covers ::calculateCheckDigit
      * @dataProvider MessageIssnProvider
      */
     public function testErrorMessageForm($arg, $err, $msg)
