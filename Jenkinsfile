@@ -20,8 +20,8 @@ pipeline {
         stage('publish') {
             steps {
                 echo 'TODO publish test results'
-                echo 'TODO publish checkstyle result'
-                echo 'TODO publish coverage'
+                step([$class: 'hudson.plugins.checkstyle.CheckStylePublisher', pattern: 'build/logs/checkstyle.xml'])
+                step([$class: 'hudson.plugins.clover.CloverPublisher', pattern: 'build/logs/phpunit.coverage.xml'])
             }
         }
     }
