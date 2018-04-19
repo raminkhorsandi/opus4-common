@@ -13,7 +13,7 @@ pipeline {
 
         stage('build') {
             steps {
-                sh 'composer check'
+                sh 'composer check-cov'
             }
         }
 
