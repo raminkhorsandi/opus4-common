@@ -19,7 +19,7 @@ pipeline {
 
         stage('publish') {
             steps {
-                step([$class: 'hudson.plugins.qtest.QtestPublisher', pattern: 'build/phpunit.xml'])
+                echo 'Todo: report Test Results'
                 step([$class: 'hudson.plugins.checkstyle.CheckStylePublisher', pattern: 'build/checkstyle.xml'])
                 step([$class: 'CloverPublisher', cloverReportDir: 'build', cloverReportFileName: 'clover.xml'])
             }
