@@ -5,10 +5,12 @@ pipeline {
 
     stages {
         stage('cleanup') {
-            sh 'rm -r build/'
-            sh 'mkdir build/results/'
-            sh 'mkdir build/checkstyle/'
-            sh 'mkdir build/coverage/'
+            steps {
+                sh 'rm -r build/'
+                sh 'mkdir build/results/'
+                sh 'mkdir build/checkstyle/'
+                sh 'mkdir build/coverage/'
+            }
         }
 
         stage('prepare') {
