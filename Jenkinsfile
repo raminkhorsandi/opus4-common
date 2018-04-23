@@ -13,15 +13,15 @@ pipeline {
 
         stage('build') {
             steps {
-                sh 'composer check'
+                sh 'composer check-cov'
             }
         }
 
         stage('publish') {
             steps {
-                echo 'TODO publish test results'
-                echo 'TODO publish checkstyle result'
-                echo 'TODO publish coverage'
+                step([$class: 'JUnitResultArchiver', testResults: 'build/phpunit.xml'])
+                step([$class: 'hudson.plugins.checkstyle.CheckStylePublisher', pattern: 'build/checkstyle.xml'])
+                step([$class: 'CloverPublisher', cloverReportDir: 'build', cloverReportFileName: 'clover.xml'])
             }
         }
     }
