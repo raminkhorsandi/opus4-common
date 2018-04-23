@@ -4,7 +4,7 @@ pipeline {
     agent any
 
     stages {
-        stage('cleanup') {
+        stage('clean') {
             steps {
                 sh 'rm -rf build/'
                 sh 'mkdir build/'
@@ -29,9 +29,19 @@ pipeline {
 
         stage('publish') {
             steps {
-                step([$class: 'JUnitResultArchiver', testResults: 'build/results/phpunit.xml'])
-                step([$class: 'hudson.plugins.checkstyle.CheckStylePublisher', pattern: 'build/checkstyle/checkstyle.xml'])
-                step([$class: 'CloverPublisher', cloverReportDir: 'build', cloverReportFileName: 'build/coverage/clover.xml'])
+                step([
+                    $class: 'JUnitResultArchiver',
+                    testResults: 'build/results/phpunit.xml'
+                ])
+                step([
+                    $class: 'hudson.plugins.checkstyle.CheckStylePublisher',
+                    pattern: 'build/checkstyle/checkstyle.xml'
+                ])
+                step([
+                    $class: 'CloverPublisher',
+                    cloverReportDir: 'build',
+                    cloverReportFileName: 'build/coverage/clover.xml'
+                ])
             }
         }
     }
