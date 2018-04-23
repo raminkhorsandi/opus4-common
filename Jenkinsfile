@@ -4,6 +4,16 @@ pipeline {
     agent any
 
     stages {
+        stage('clean') {
+            steps {
+                sh 'rm -rf build/'
+                sh 'mkdir build/'
+                sh 'mkdir build/results/'
+                sh 'mkdir build/checkstyle/'
+                sh 'mkdir build/coverage/'
+            }
+        }
+
         stage('prepare') {
             steps {
                 sh 'composer install'
@@ -11,17 +21,27 @@ pipeline {
             }
         }
 
-        stage('build') {
+        stage('test') {
             steps {
-                sh 'composer check-cov'
+                sh 'composer check-coverage'
             }
         }
 
         stage('publish') {
             steps {
-                step([$class: 'JUnitResultArchiver', testResults: 'build/phpunit.xml'])
-                step([$class: 'hudson.plugins.checkstyle.CheckStylePublisher', pattern: 'build/checkstyle.xml'])
-                step([$class: 'CloverPublisher', cloverReportDir: 'build', cloverReportFileName: 'clover.xml'])
+                step([
+                    $class: 'JUnitResultArchiver',
+                    testResults: 'build/results/phpunit.xml'
+                ])
+                step([
+                    $class: 'hudson.plugins.checkstyle.CheckStylePublisher',
+                    pattern: 'build/checkstyle/checkstyle.xml'
+                ])
+                step([
+                    $class: 'CloverPublisher',
+                    cloverReportDir: 'build',
+                    cloverReportFileName: 'build/coverage/clover.xml'
+                ])
             }
         }
     }
