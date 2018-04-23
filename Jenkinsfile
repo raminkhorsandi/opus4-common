@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('cleanup') {
             steps {
-                sh 'rm -r build/'
+                sh 'rm -rf build/'
                 sh 'mkdir build/'
                 sh 'mkdir build/results/'
                 sh 'mkdir build/checkstyle/'
