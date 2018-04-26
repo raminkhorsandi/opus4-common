@@ -8,8 +8,6 @@ pipeline {
             steps {
                 sh 'rm -rf build/'
                 sh 'mkdir build/'
-                sh 'mkdir build/results/'
-                sh 'mkdir build/checkstyle/'
                 sh 'mkdir build/coverage/'
             }
         }
@@ -23,7 +21,7 @@ pipeline {
 
         stage('test') {
             steps {
-                sh 'composer check-coverage'
+                sh 'composer check-full'
             }
         }
 
@@ -31,11 +29,11 @@ pipeline {
             steps {
                 step([
                     $class: 'JUnitResultArchiver',
-                    testResults: 'build/results/phpunit.xml'
+                    testResults: 'build/phpunit.xml'
                 ])
                 step([
                     $class: 'hudson.plugins.checkstyle.CheckStylePublisher',
-                    pattern: 'build/checkstyle/checkstyle.xml'
+                    pattern: 'build/checkstyle.xml'
                 ])
                 step([
                     $class: 'CloverPublisher',
