@@ -80,15 +80,15 @@ class IssnTest extends \PHPUnit_Framework_TestCase
     public function messageIssnProvider()
     {
         return [
-            ['12345478', 'form', "'12345478' is malformed"],
-            ['12456-65478', 'form', "'12456-65478' is malformed"],
-            ['123456789', 'form', "'123456789' is malformed"],
-            ['1050 124X', 'form', "'1050 124X' is malformed"],
-            ['1050_124X', 'form', "'1050_124X' is malformed"],
-            ['1050-1242', 'checkdigit', "The check digit of '1050-1242' is not valid"],
-            ['1062-512X', 'checkdigit', "The check digit of '1062-512X' is not valid"],
-            ['0025-5856', 'checkdigit', "The check digit of '0025-5856' is not valid"],
-            ['0001-3211', 'checkdigit', "The check digit of '0001-3211' is not valid"],
+            ['12345478', 'form', "'12345478' is malformed."],
+            ['12456-65478', 'form', "'12456-65478' is malformed."],
+            ['123456789', 'form', "'123456789' is malformed."],
+            ['1050 124X', 'form', "'1050 124X' is malformed."],
+            ['1050_124X', 'form', "'1050_124X' is malformed."],
+            ['1050-1242', 'checkdigit', "The check digit of '1050-1242' is not valid."],
+            ['1062-512X', 'checkdigit', "The check digit of '1062-512X' is not valid."],
+            ['0025-5856', 'checkdigit', "The check digit of '0025-5856' is not valid."],
+            ['0001-3211', 'checkdigit', "The check digit of '0001-3211' is not valid."],
         ];
     }
 

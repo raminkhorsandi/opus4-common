@@ -34,6 +34,9 @@
 
 namespace Opus\Validate;
 
+use Opus\Validate\Isbn10;
+use Opus\Validate\Isbn13;
+
 /**
  * Validator for Isbn field.
  *
@@ -62,8 +65,8 @@ class Isbn extends \Zend_Validate_Abstract
      * @var array
      */
     protected $_messageTemplates = [
-        self::MSG_CHECK_DIGIT => "The check digit of '%value%' is not valid",
-        self::MSG_FORM => "'%value%' is malformed"
+        self::MSG_CHECK_DIGIT => "The check digit of '%value%' is not valid.",
+        self::MSG_FORM => "'%value%' is malformed."
     ];
 
     /**
@@ -76,14 +79,14 @@ class Isbn extends \Zend_Validate_Abstract
     {
         $this->_setValue($value);
 
-        $len = strlen($value);
+        $len = count($this->extractDigits($value));
         $isbn_validator = null;
         switch ($len) {
-            case 10 + 3:
+            case 10:
                 $isbn_validator = new Isbn10();
                 $result = $isbn_validator->isValid($value);
                 break;
-            case 13 + 4:
+            case 13:
                 $isbn_validator = new Isbn13();
                 $result = $isbn_validator->isValid($value);
                 break;
@@ -92,6 +95,7 @@ class Isbn extends \Zend_Validate_Abstract
                 $result = false;
                 break;
         }
+
         if (is_null($isbn_validator) === false) {
             foreach ($isbn_validator->getErrors() as $error) {
                 $this->_error($error);
@@ -99,5 +103,21 @@ class Isbn extends \Zend_Validate_Abstract
         }
 
         return $result;
+    }
+
+    public function extractDigits($value)
+    {
+        $isbn_parts = preg_split('/(-|\s)/', $value);
+
+        // Separate digits for checkdigit calculation
+        $digits = [];
+
+        for ($i = 0; $i < count($isbn_parts); $i++) {
+            foreach (str_split($isbn_parts[$i]) as $digit) {
+                $digits[] = $digit;
+            }
+        }
+
+        return $digits;
     }
 }

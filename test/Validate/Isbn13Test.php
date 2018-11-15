@@ -57,10 +57,12 @@ class Isbn13Test extends \PHPUnit_Framework_TestCase
     public function validDataProvider()
     {
         return [
+            ['9785793181631'],
             ['978-3-86680-192-9'],
             ['978-5-7931-8163-1'],
             ['978-979-3182-63-6'],
             ['978 3 86680 192 9'],
+            ['9785793181631'],
             ['978 5 7931 8163 1'],
             ['978 979 3182 63 6'],
         ];
@@ -81,6 +83,8 @@ class Isbn13Test extends \PHPUnit_Framework_TestCase
             ['4711-0815', 'Malformed string not rejected.'],
             ['980-3-86680-192-9', 'Wrong prefix not rejected.'],
             ['978-3-86680-192-5', 'Wrong check digit not rejected.'],
+            ['978 5 7931 816321',  'Malformed string not rejected.'],
+            ['97857931816321', 'Malformed string not rejected.'],
             ['978 3 86680-192-9', 'Mixed separators not rejected.']
         ];
     }

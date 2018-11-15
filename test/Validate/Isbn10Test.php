@@ -57,10 +57,16 @@ class Isbn10Test extends \PHPUnit_Framework_TestCase
     public function validDataProvider()
     {
         return [
+            ['123456789X'],
+            ['1-23456-789-X'],
             ['3-86680-192-0'],
+            ['0-9752298-0-X'],
+            ['0-8044-2957-X'],
             ['3-937602-69-0'],
             ['3 86680 192 0'],
-            ['3 937602 69 0']
+            ['3 937602 69 0'],
+            ['3866801920'],
+            ['3937602690']
         ];
     }
 
@@ -79,7 +85,9 @@ class Isbn10Test extends \PHPUnit_Framework_TestCase
             ['4711-0815',          'Malformed string not rejected.'],
             ['978-3-86680-192-9',  'ISBN-13 not rejected.'],
             ['3-86680-192-5',      'Wrong check digit not rejected.'],
-            ['3 86680 192-0',      'Mixed separators not rejected.']
+            ['3 86680 192-0',      'Mixed separators not rejected.'],
+            ['X866801920',      'Malformed string not rejected.'],
+            ['3 937602 6930', 'Malformed string not rejected.']
         ];
     }
 
