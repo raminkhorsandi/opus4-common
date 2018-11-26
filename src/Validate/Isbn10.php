@@ -40,34 +40,8 @@ namespace Opus\Validate;
  * @category    Framework
  * @package     Opus_Validate
  */
-class Isbn10 extends \Zend_Validate_Abstract
+class Isbn10 extends Isbn
 {
-
-    /**
-     * Error message key for invalid check digit.
-     *
-     */
-    const MSG_CHECK_DIGIT = 'checkdigit';
-
-
-    /**
-     * Error message key for malformed ISBN.
-     *
-     */
-    const MSG_FORM = 'form';
-
-    /**
-     * Error message templates.
-     *
-     * @var array
-     */
-    // phpcs:disable PSR2.Classes.PropertyDeclaration.Underscore
-    protected $_messageTemplates = [
-        self::MSG_CHECK_DIGIT => "The check digit of '%value%' is not valid.",
-        self::MSG_FORM => "'%value%' is malformed."
-    ];
-    // phpcs:enable
-
     /**
      * Validate the given ISBN-10 string.
      *
@@ -98,17 +72,7 @@ class Isbn10 extends \Zend_Validate_Abstract
             return false;
         }
 
-        // Split ISBN into its parts
-        $isbn_parts = preg_split('/(-|\s)/', $value);
-
-        // Separate digits for checkdigit calculation
-        $digits = [];
-        for ($i = 0; $i < count($isbn_parts); $i++) {
-            foreach (str_split($isbn_parts[$i]) as $digit) {
-                $digits[] = $digit;
-            }
-        }
-
+        $digits = self::extractDigits($value);
         if (count($digits) != 10) {
             $this->_error(self::MSG_FORM);
             return false;
