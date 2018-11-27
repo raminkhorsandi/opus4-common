@@ -28,6 +28,7 @@
  * @package     Opus_Validate
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
  * @author      Jens Schwidder <schwidder@zib.de>
+ * @author      Maximilian Salomon <salomon@zib.de>
  * @copyright   Copyright (c) 2008-2018, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
  */
@@ -40,32 +41,8 @@ namespace Opus\Validate;
  * @category    Framework
  * @package     Opus_Validate
  */
-class Isbn13 extends \Zend_Validate_Abstract
+class Isbn13 extends Isbn
 {
-
-    /**
-     * Error message key for invalid check digit.
-     *
-     */
-    const MSG_CHECK_DIGIT = 'checkdigit';
-
-
-    /**
-     * Error message key for malformed ISBN.
-     *
-     */
-    const MSG_FORM = 'form';
-
-    /**
-     * Error message templates.
-     *
-     * @var array
-     */
-    protected $_messageTemplates = [
-        self::MSG_CHECK_DIGIT => "The check digit of '%value%' is not valid.",
-        self::MSG_FORM => "'%value%' is malformed."
-    ];
-
     /**
      * Validate the given ISBN-13 string.
      *
@@ -95,16 +72,8 @@ class Isbn13 extends \Zend_Validate_Abstract
             return false;
         }
 
-        // Split ISBN into its parts
-        $isbn_parts = preg_split('/(-|\s)/', $value);
-
         // Separate digits for checkdigit calculation
-        $digits = [];
-        for ($i = 0; $i < count($isbn_parts); $i++) {
-            foreach (str_split($isbn_parts[$i]) as $digit) {
-                $digits[] = $digit;
-            }
-        }
+        $digits = self::extractDigits($value);
 
         if (count($digits) != 13) {
             $this->_error(self::MSG_FORM);

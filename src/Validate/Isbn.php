@@ -28,16 +28,18 @@
  * @package     Opus_Validate
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
  * @author      Jens Schwidder <schwidder@zib.de>
+ * @author      Maximilian Salomon <salomon@zib.de>
  * @copyright   Copyright (c) 2008-2018, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
  */
 
 namespace Opus\Validate;
 
-use Opus\Validate\Isbn10;
-use Opus\Validate\Isbn13;
-
 /**
+ * TODO better class design? circular dependency between Isbn and its child classes (Isbn10, Isbn13)
+ * This class and the Isbn13 and Isbn10 child classes have an circular dependency.
+ * The classes could be putted together, but the option to use the child-classes as validators should be maintained.
+ *
  * Validator for Isbn field.
  *
  * @category    Framework
@@ -45,13 +47,10 @@ use Opus\Validate\Isbn13;
  */
 class Isbn extends \Zend_Validate_Abstract
 {
-
     /**
      * Error message key for invalid check digit.
-     *
      */
     const MSG_CHECK_DIGIT = 'checkdigit';
-
 
     /**
      * Error message key for malformed ISBN.
@@ -79,16 +78,13 @@ class Isbn extends \Zend_Validate_Abstract
     {
         $this->_setValue($value);
 
-        $len = count($this->extractDigits($value));
         $isbn_validator = null;
-        switch ($len) {
+        switch (count($this->extractDigits($value))) {
             case 10:
                 $isbn_validator = new Isbn10();
-                $result = $isbn_validator->isValid($value);
                 break;
             case 13:
                 $isbn_validator = new Isbn13();
-                $result = $isbn_validator->isValid($value);
                 break;
             default:
                 $this->_error(self::MSG_FORM);
@@ -97,6 +93,7 @@ class Isbn extends \Zend_Validate_Abstract
         }
 
         if (is_null($isbn_validator) === false) {
+            $result = $isbn_validator->isValid($value);
             foreach ($isbn_validator->getErrors() as $error) {
                 $this->_error($error);
             }
@@ -105,19 +102,12 @@ class Isbn extends \Zend_Validate_Abstract
         return $result;
     }
 
+    /**
+     * @param $value
+     * @return array with seperated character except the seperators
+     */
     public function extractDigits($value)
     {
-        $isbn_parts = preg_split('/(-|\s)/', $value);
-
-        // Separate digits for checkdigit calculation
-        $digits = [];
-
-        for ($i = 0; $i < count($isbn_parts); $i++) {
-            foreach (str_split($isbn_parts[$i]) as $digit) {
-                $digits[] = $digit;
-            }
-        }
-
-        return $digits;
+        return str_split(preg_replace('(-|\s)', '', $value));
     }
 }
