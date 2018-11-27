@@ -25,7 +25,7 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
  * @category    Framework
- * @package     Opus_Validate
+ * @package     Opus\Validate
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
  * @author      Jens Schwidder <schwidder@zib.de>
  * @author      Maximilian Salomon <salomon@zib.de>
@@ -36,14 +36,14 @@
 namespace Opus\Validate;
 
 /**
- * TODO better class design? circular dependency between Isbn and its child classes (Isbn10, Isbn13)
- * This class and the Isbn13 and Isbn10 child classes have an circular dependency.
- * The classes could be putted together, but the option to use the child-classes as validators should be maintained.
- *
- * Validator for Isbn field.
+ * Validator for ISBN values.
  *
  * @category    Framework
- * @package     Opus_Validate
+ * @package     Opus\Validate
+ *
+ * TODO better class design? circular dependency between Isbn and its child classes (Isbn10, Isbn13)
+ *      The three classes could be merged, however we didn't want to eliminate the option of allowing
+ *      only ISBN-10 or only ISBN-13 values.
  */
 class Isbn extends \Zend_Validate_Abstract
 {
