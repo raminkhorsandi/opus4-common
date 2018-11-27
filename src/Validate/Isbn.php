@@ -76,6 +76,7 @@ class Isbn extends \Zend_Validate_Abstract
     {
         $this->_setValue($value);
 
+        $isbn_validator = null;
         switch (count($this->extractDigits($value))) {
             case 10:
                 $isbn_validator = new Isbn10();
@@ -89,7 +90,7 @@ class Isbn extends \Zend_Validate_Abstract
                 break;
         }
 
-        if (!isset($isbn_validator) === false) {
+        if (is_null($isbn_validator) === false) {
             $result = $isbn_validator->isValid($value);
             foreach ($isbn_validator->getErrors() as $error) {
                 $this->_error($error);
