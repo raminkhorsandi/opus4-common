@@ -27,7 +27,7 @@
  * @category    Framework
  * @package     Opus_Model
  * @author      Jens Schwidder <schwidder@zib.de>
- * @copyright   Copyright (c) 2018, OPUS 4 development team
+ * @copyright   Copyright (c) 2018-2019, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
  */
 
@@ -45,6 +45,23 @@ use Opus\Model\Plugin\PluginInterface;
  * A new plugin object is created for every model object. Every Opus_Document object for instance has multiple plugin
  * objects.
  *
+ * Each model class defines default plugins that are always used. It should be possible to add additional plugins. The
+ * mechanism should in both cases be the same. All the plugins are 'added' at some point. Some plugins are just the
+ * default for a particular class.
+ *
+ * If a plugin is not optional it should not be a plugin. TODO correct?
+ *
+ * TODO allow registering (default) plugins that are then used for all new objects (static)
+ * TODO support explizit ordering of plugins
+ * TODO Reintegrate code in appropriate class if this Trait is not needed in more than one class. (Currently mostly used to understand code better.)
+ *
+ * It is necessary to manage the default plugins for the class. Some are registered as part of the class definition,
+ * others are added at runtime like the optional cache or indexing plugin. The registered plugins are the loaded for
+ * every new object. Plugins can be remove from an object or added. This affects only the concrete object.
+ *
+ * It must be possible to register new plugins in a decentralized fashion in order to be open to extension, but closed
+ * for modification. It should not be necessary to edit the list of class level default plugins.
+ *
  */
 trait PluginsTrait
 {
@@ -54,9 +71,42 @@ trait PluginsTrait
      *
      * Copy-Paste from Qucosa-Code base.
      *
+     * NOTE: Modified name from $_plugins so that plugins management is only internal to PluginsTrait. Outside, the
+     * default plugins are still defined in $_plugins. That name might be changed in the future to $defaultPlugins.
+     *
      * @var array
      */
     protected $_plugins = [];
+
+    private static $defaultPlugins = [];
+
+    private $plugins = [];
+
+    /**
+     *
+     * @param $plugin
+     */
+    public static function addDefaultPlugin($plugin)
+    {
+        self::$defaultPlugins[$plugin] = $plugin;
+    }
+
+    public static function removeDefaultPlugin($plugin)
+    {
+        if (isset(self::$defaultPlugins[$plugin])) {
+            unset(self::$defaultPlugins[$plugin]);
+        }
+    }
+
+    public static function getDefaultPlugins()
+    {
+        return self::$defaultPlugins;
+    }
+
+    public static function isDefaultPlugin($plugin)
+    {
+        return array_key_exists($plugin, self::$defaultPlugins);
+    }
 
     /**
      * Instanciate and install plugins for this model.
@@ -67,31 +117,42 @@ trait PluginsTrait
      */
     protected function _loadPlugins()
     {
-        foreach ($this->_plugins as $pluginname => $plugin) {
+        $plugins = $this->getDefaultPlugins();
+
+        foreach ($plugins as $pluginClass => $plugin) {
             if (true === is_string($plugin)) {
-                $pluginname = $plugin;
+                $pluginClass = $plugin;
                 $plugin = null;
             }
 
             if (null === $plugin) {
-                $plugin = new $pluginname;
+                $this->registerPlugin($pluginClass);
+            } else {
+                $this->registerPlugin($plugin);
             }
-
-            $this->registerPlugin($plugin);
         }
     }
 
     /**
-     * Register a pre- or post processing plugin.
+     * Registers a plugin with the model object.
      *
      * Copy-Paste from Qucosa-Code base.
      *
-     * @param PluginInterface $plugin Plugin to register for this very model.
+     * @param PluginInterface|string $plugin Plugin to register for this very model.
      * @return void
      */
-    public function registerPlugin(PluginInterface $plugin)
+    public function registerPlugin($plugin)
     {
-        $this->_plugins[get_class($plugin)] = $plugin;
+        $pluginClass = null;
+
+        if (true === is_string($plugin)) {
+            $pluginClass = $plugin;
+            $plugin = new $pluginClass;
+        } else {
+            $pluginClass = get_class($plugin);
+        }
+
+        $this->plugins[$pluginClass] = $plugin;
     }
 
     /**
@@ -112,11 +173,11 @@ trait PluginsTrait
         if (true === is_object($plugin)) {
             $key = get_class($plugin);
         }
-        if (false === isset($this->_plugins[$key])) {
+        if (false === isset($this->plugins[$key])) {
             // don't throw exception, just write a warning
             $this->getLogger()->warn('Cannot unregister specified plugin: ' . $key);
         } else {
-            unset($this->_plugins[$key]);
+            unset($this->plugins[$key]);
         }
     }
 
@@ -126,7 +187,20 @@ trait PluginsTrait
      */
     public function hasPlugin($plugin)
     {
-        return array_key_exists($plugin, $this->_plugins);
+        return array_key_exists($plugin, $this->plugins);
+    }
+
+    /**
+     * Returns array with classes for default plugins defined in model class.
+     *
+     * TODO Is this a good way to define the defaults or should the function be overwritten.
+     * TODO modify name of function
+     *
+     * @return mixed
+     */
+    public function getDefaultPlugins2()
+    {
+        return $this->_plugins;
     }
 
     /**
@@ -146,7 +220,7 @@ trait PluginsTrait
                 $param = $parameter;
             }
 
-            foreach ($this->_plugins as $name => $plugin) {
+            foreach ($this->plugins as $name => $plugin) {
                 $plugin->$methodname($param);
             }
         } catch (\Exception $ex) {
