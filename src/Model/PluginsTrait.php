@@ -78,34 +78,11 @@ trait PluginsTrait
      */
     protected $_plugins = [];
 
-    private static $defaultPlugins = [];
-
     private $plugins = [];
 
-    /**
-     *
-     * @param $plugin
-     */
-    public static function addDefaultPlugin($plugin)
+    public function getDefaultPlugins()
     {
-        self::$defaultPlugins[$plugin] = $plugin;
-    }
-
-    public static function removeDefaultPlugin($plugin)
-    {
-        if (isset(self::$defaultPlugins[$plugin])) {
-            unset(self::$defaultPlugins[$plugin]);
-        }
-    }
-
-    public static function getDefaultPlugins()
-    {
-        return self::$defaultPlugins;
-    }
-
-    public static function isDefaultPlugin($plugin)
-    {
-        return array_key_exists($plugin, self::$defaultPlugins);
+        return null;
     }
 
     /**
@@ -115,9 +92,13 @@ trait PluginsTrait
      *
      * @return void
      */
-    protected function _loadPlugins()
+    protected function loadPlugins()
     {
         $plugins = $this->getDefaultPlugins();
+
+        if (!is_array($plugins)) {
+            return;
+        }
 
         foreach ($plugins as $pluginClass => $plugin) {
             if (true === is_string($plugin)) {
@@ -211,7 +192,7 @@ trait PluginsTrait
      * @param string $methodname Name of plugin method to call
      * @param mixed  $parameter  Value that gets passed instead of the model instance.
      */
-    protected function _callPluginMethod($methodname, $parameter = null)
+    protected function callPluginMethod($methodname, $parameter = null)
     {
         try {
             if (null === $parameter) {
