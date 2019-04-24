@@ -96,17 +96,8 @@ trait PluginsTrait
             return;
         }
 
-        foreach ($plugins as $pluginClass => $plugin) {
-            if (true === is_string($plugin)) {
-                $pluginClass = $plugin;
-                $plugin = null;
-            }
-
-            if (null === $plugin) {
-                $this->registerPlugin($pluginClass);
-            } else {
-                $this->registerPlugin($plugin);
-            }
+        foreach ($plugins as $pluginClass) {
+            $this->registerPlugin($pluginClass);
         }
     }
 
