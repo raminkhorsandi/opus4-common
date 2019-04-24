@@ -62,24 +62,20 @@ use Opus\Model\Plugin\PluginInterface;
  * It must be possible to register new plugins in a decentralized fashion in order to be open to extension, but closed
  * for modification. It should not be necessary to edit the list of class level default plugins.
  *
+ * TODO make plugins shared between all model of objects
  */
 trait PluginsTrait
 {
 
+    private $plugins = null;
+
     /**
-     * Array mapping plugin class names to model plugins.
+     * Returns list with default plugin classes.
      *
-     * Copy-Paste from Qucosa-Code base.
+     * This function is overwritten in model classes to provide modified list of default plugins.
      *
-     * NOTE: Modified name from $_plugins so that plugins management is only internal to PluginsTrait. Outside, the
-     * default plugins are still defined in $_plugins. That name might be changed in the future to $defaultPlugins.
-     *
-     * @var array
+     * @return null
      */
-    protected $_plugins = [];
-
-    private $plugins = [];
-
     public function getDefaultPlugins()
     {
         return null;
@@ -96,7 +92,7 @@ trait PluginsTrait
     {
         $plugins = $this->getDefaultPlugins();
 
-        if (!is_array($plugins)) {
+        if (! is_array($plugins)) {
             return;
         }
 
@@ -133,6 +129,10 @@ trait PluginsTrait
             $pluginClass = get_class($plugin);
         }
 
+        if (! is_array($this->plugins)) {
+            $this->plugins = [];
+        }
+
         $this->plugins[$pluginClass] = $plugin;
     }
 
@@ -154,6 +154,7 @@ trait PluginsTrait
         if (true === is_object($plugin)) {
             $key = get_class($plugin);
         }
+
         if (false === isset($this->plugins[$key])) {
             // don't throw exception, just write a warning
             $this->getLogger()->warn('Cannot unregister specified plugin: ' . $key);
@@ -168,20 +169,24 @@ trait PluginsTrait
      */
     public function hasPlugin($plugin)
     {
-        return array_key_exists($plugin, $this->plugins);
+        if (is_array($this->plugins)) {
+            return array_key_exists($plugin, $this->plugins);
+        } else {
+            return false;
+        }
     }
 
     /**
-     * Returns array with classes for default plugins defined in model class.
+     * Returns plugin objects.
      *
-     * TODO Is this a good way to define the defaults or should the function be overwritten.
-     * TODO modify name of function
-     *
-     * @return mixed
+     * @return array of plugin objects
      */
-    public function getDefaultPlugins2()
+    public function getPlugins()
     {
-        return $this->_plugins;
+        if (is_null($this->plugins)) {
+            $this->loadPlugins();
+        }
+        return $this->plugins;
     }
 
     /**
@@ -194,6 +199,12 @@ trait PluginsTrait
      */
     protected function callPluginMethod($methodname, $parameter = null)
     {
+        $plugins = $this->getPlugins();
+
+        if (is_null($plugins)) {
+            return;
+        }
+
         try {
             if (null === $parameter) {
                 $param = $this;
@@ -201,7 +212,7 @@ trait PluginsTrait
                 $param = $parameter;
             }
 
-            foreach ($this->plugins as $name => $plugin) {
+            foreach ($plugins as $name => $plugin) {
                 $plugin->$methodname($param);
             }
         } catch (\Exception $ex) {
