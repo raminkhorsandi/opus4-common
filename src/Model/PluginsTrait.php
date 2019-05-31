@@ -207,7 +207,7 @@ trait PluginsTrait
             foreach ($plugins as $name => $plugin) {
                 if ($plugin instanceof \Opus\Model\Plugin\ServerStateChangeListener) {
                     // Plugins, die das Interface implementieren, werden nur bei Änderung des serverState aufgerufen
-                    if (($param instanceof \Opus_Document) && !$param->getServerStateChanged()) {
+                    if (($param instanceof \Opus_Document) && ! $param->getServerStateChanged()) {
                         continue; // es erfolgt kein Aufruf des Plugins
                     }
                 }
