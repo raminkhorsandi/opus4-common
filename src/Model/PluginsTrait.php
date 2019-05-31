@@ -34,6 +34,7 @@
 namespace Opus\Model;
 
 use Opus\Model\Plugin\PluginInterface;
+use Opus\Model\Plugin\ServerStateChangeListener;
 
 /**
  * Trait for adding plugin support to a class.
@@ -204,6 +205,12 @@ trait PluginsTrait
             }
 
             foreach ($plugins as $name => $plugin) {
+                if ($plugin instanceof \Opus\Model\Plugin\ServerStateChangeListener) {
+                    // Plugins, die das Interface implementieren, werden nur bei Änderung des serverState aufgerufen
+                    if (($param instanceof \Opus_Document) && !$param->getServerStateChanged()) {
+                        continue; // es erfolgt kein Aufruf des Plugins
+                    }
+                }
                 $plugin->$methodname($param);
             }
         } catch (\Exception $ex) {
