@@ -34,6 +34,7 @@
 namespace Opus\Model;
 
 use Opus\Model\Plugin\PluginInterface;
+use Opus\Model\Plugin\ServerStateChangeListener;
 
 /**
  * Trait for adding plugin support to a class.
@@ -62,50 +63,23 @@ use Opus\Model\Plugin\PluginInterface;
  * It must be possible to register new plugins in a decentralized fashion in order to be open to extension, but closed
  * for modification. It should not be necessary to edit the list of class level default plugins.
  *
+ * TODO make plugins shared between all model of objects
  */
 trait PluginsTrait
 {
 
-    /**
-     * Array mapping plugin class names to model plugins.
-     *
-     * Copy-Paste from Qucosa-Code base.
-     *
-     * NOTE: Modified name from $_plugins so that plugins management is only internal to PluginsTrait. Outside, the
-     * default plugins are still defined in $_plugins. That name might be changed in the future to $defaultPlugins.
-     *
-     * @var array
-     */
-    protected $_plugins = [];
-
-    private static $defaultPlugins = [];
-
-    private $plugins = [];
+    private $plugins = null;
 
     /**
+     * Returns list with default plugin classes.
      *
-     * @param $plugin
+     * This function is overwritten in model classes to provide modified list of default plugins.
+     *
+     * @return null
      */
-    public static function addDefaultPlugin($plugin)
+    public function getDefaultPlugins()
     {
-        self::$defaultPlugins[$plugin] = $plugin;
-    }
-
-    public static function removeDefaultPlugin($plugin)
-    {
-        if (isset(self::$defaultPlugins[$plugin])) {
-            unset(self::$defaultPlugins[$plugin]);
-        }
-    }
-
-    public static function getDefaultPlugins()
-    {
-        return self::$defaultPlugins;
-    }
-
-    public static function isDefaultPlugin($plugin)
-    {
-        return array_key_exists($plugin, self::$defaultPlugins);
+        return null;
     }
 
     /**
@@ -115,21 +89,16 @@ trait PluginsTrait
      *
      * @return void
      */
-    protected function _loadPlugins()
+    protected function loadPlugins()
     {
         $plugins = $this->getDefaultPlugins();
 
-        foreach ($plugins as $pluginClass => $plugin) {
-            if (true === is_string($plugin)) {
-                $pluginClass = $plugin;
-                $plugin = null;
-            }
+        if (! is_array($plugins)) {
+            return;
+        }
 
-            if (null === $plugin) {
-                $this->registerPlugin($pluginClass);
-            } else {
-                $this->registerPlugin($plugin);
-            }
+        foreach ($plugins as $pluginClass) {
+            $this->registerPlugin($pluginClass);
         }
     }
 
@@ -150,6 +119,10 @@ trait PluginsTrait
             $plugin = new $pluginClass;
         } else {
             $pluginClass = get_class($plugin);
+        }
+
+        if (! is_array($this->plugins)) {
+            $this->plugins = [];
         }
 
         $this->plugins[$pluginClass] = $plugin;
@@ -173,6 +146,7 @@ trait PluginsTrait
         if (true === is_object($plugin)) {
             $key = get_class($plugin);
         }
+
         if (false === isset($this->plugins[$key])) {
             // don't throw exception, just write a warning
             $this->getLogger()->warn('Cannot unregister specified plugin: ' . $key);
@@ -187,20 +161,24 @@ trait PluginsTrait
      */
     public function hasPlugin($plugin)
     {
-        return array_key_exists($plugin, $this->plugins);
+        if (is_array($this->plugins)) {
+            return array_key_exists($plugin, $this->plugins);
+        } else {
+            return false;
+        }
     }
 
     /**
-     * Returns array with classes for default plugins defined in model class.
+     * Returns plugin objects.
      *
-     * TODO Is this a good way to define the defaults or should the function be overwritten.
-     * TODO modify name of function
-     *
-     * @return mixed
+     * @return array of plugin objects
      */
-    public function getDefaultPlugins2()
+    public function getPlugins()
     {
-        return $this->_plugins;
+        if (is_null($this->plugins)) {
+            $this->loadPlugins();
+        }
+        return $this->plugins;
     }
 
     /**
@@ -211,8 +189,14 @@ trait PluginsTrait
      * @param string $methodname Name of plugin method to call
      * @param mixed  $parameter  Value that gets passed instead of the model instance.
      */
-    protected function _callPluginMethod($methodname, $parameter = null)
+    protected function callPluginMethod($methodname, $parameter = null)
     {
+        $plugins = $this->getPlugins();
+
+        if (is_null($plugins)) {
+            return;
+        }
+
         try {
             if (null === $parameter) {
                 $param = $this;
@@ -220,7 +204,13 @@ trait PluginsTrait
                 $param = $parameter;
             }
 
-            foreach ($this->plugins as $name => $plugin) {
+            foreach ($plugins as $name => $plugin) {
+                if ($plugin instanceof \Opus\Model\Plugin\ServerStateChangeListener) {
+                    // Plugins, die das Interface implementieren, werden nur bei Änderung des serverState aufgerufen
+                    if (($param instanceof \Opus_Document) && ! $param->getServerStateChanged()) {
+                        continue; // es erfolgt kein Aufruf des Plugins
+                    }
+                }
                 $plugin->$methodname($param);
             }
         } catch (\Exception $ex) {
