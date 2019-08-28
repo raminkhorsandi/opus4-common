@@ -1,16 +1,20 @@
-#!groovy
+def jobNameParts = JOB_NAME.tokenize('/') as String[]
+def projectName = jobNameParts[0]
+
+if (projectName.contains('night')) {
+    TYPE = "long"
+} else {
+    TYPE = "short"
+}
 
 pipeline {
-    agent any
+    agent { dockerfile {args "-u root -v /var/run/docker.sock:/var/run/docker.sock"}}
+
+    triggers {
+        cron( TYPE.equals('long') ? 'H 3 * * *' : '')
+    }
 
     stages {
-        stage('clean') {
-            steps {
-                sh 'rm -rf build/'
-                sh 'mkdir build/'
-                sh 'mkdir build/coverage/'
-            }
-        }
 
         stage('prepare') {
             steps {
@@ -21,9 +25,16 @@ pipeline {
 
         stage('test') {
             steps {
-                sh 'composer check-full'
+                script{
+                    if (TYPE == 'short') {
+                        sh 'composer test'
+                    } else if (TYPE == 'long') {
+                        sh 'composer check-full'
+                    }
+                }
             }
         }
+
 
         stage('publish') {
             steps {
@@ -37,9 +48,10 @@ pipeline {
                 ])
                 step([
                     $class: 'CloverPublisher',
-                    cloverReportDir: 'build/coverage',
+                    cloverReportDir: 'build/coverage/',
                     cloverReportFileName: 'clover.xml'
                 ])
+                step([$class: 'WsCleanup'])
             }
         }
     }
