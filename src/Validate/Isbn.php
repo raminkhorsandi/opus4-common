@@ -108,6 +108,16 @@ class Isbn extends \Zend_Validate_Abstract
      */
     public function extractDigits($value)
     {
-        return str_split(preg_replace('(-|\s)', '', $value));
+        $isbn_parts = preg_split('/(-|\s)/', $value);
+
+        // Separate digits for checkdigit calculation
+        $digits = [];
+        for ($i = 0; $i < count($isbn_parts); $i++) {
+            foreach (str_split($isbn_parts[$i]) as $digit) {
+                $digits[] = $digit;
+            }
+        }
+
+        return $digits;
     }
 }

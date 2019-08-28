@@ -29,7 +29,7 @@
  * @author      Ralf Claussnitzer <ralf.claussnitzer@slub-dresden.de>
  * @author      Jens Schwidder <schwidder@zib.de>
  * @author      Maximilian Salomon <salomon@zib.de>
- * @copyright   Copyright (c) 2008-2018, OPUS 4 development team
+ * @copyright   Copyright (c) 2008-2019, OPUS 4 development team
  * @license     http://www.gnu.org/licenses/gpl.html General Public License
  */
 
@@ -43,6 +43,30 @@ namespace Opus\Validate;
  */
 class Isbn10 extends Isbn
 {
+
+    /**
+     * Error message key for invalid check digit.
+     *
+     */
+    const MSG_CHECK_DIGIT = 'checkdigit';
+
+
+    /**
+     * Error message key for malformed ISBN.
+     *
+     */
+    const MSG_FORM = 'form';
+
+    /**
+     * Error message templates.
+     *
+     * @var array
+     */
+    protected $_messageTemplates = [
+        self::MSG_CHECK_DIGIT => "The check digit of '%value%' is not valid",
+        self::MSG_FORM => "'%value%' is malformed"
+    ];
+
     /**
      * Validate the given ISBN-10 string.
      *
@@ -73,7 +97,7 @@ class Isbn10 extends Isbn
             return false;
         }
 
-        $digits = self::extractDigits($value);
+        $digits = $this->extractDigits($value);
         if (count($digits) != 10) {
             $this->_error(self::MSG_FORM);
             return false;

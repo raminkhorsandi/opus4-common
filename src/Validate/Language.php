@@ -77,7 +77,7 @@ class Language extends \Zend_Validate_Abstract
             $translationList = $registry->get('Available_Languages');
         } else {
             $locale = new \Zend_Locale();
-            $translationList = $locale->getLanguageTranslationList();
+            $translationList = $locale->getTranslationList('language');
         }
 
         foreach ($value as $val) {
