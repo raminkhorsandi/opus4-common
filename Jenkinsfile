@@ -29,7 +29,7 @@ pipeline {
                         case "long":
                             sh 'composer check-full'
                             break
-                        case default:
+                        default:
                             sh 'composer test'
                             break
                     }
