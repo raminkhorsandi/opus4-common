@@ -1,17 +1,16 @@
 def jobNameParts = JOB_NAME.tokenize('/') as String[]
 def projectName = jobNameParts[0]
+def buildType = "short"
 
 if (projectName.contains('night')) {
-    TYPE = "long"
-} else {
-    TYPE = "short"
+    buildType = "long"
 }
 
 pipeline {
     agent { dockerfile {args "-u root -v /var/run/docker.sock:/var/run/docker.sock"}}
 
     triggers {
-        cron( TYPE.equals('long') ? 'H 3 * * *' : '')
+        cron( buildType.equals('long') ? 'H 3 * * *' : '')
     }
 
     stages {
@@ -26,10 +25,13 @@ pipeline {
         stage('test') {
             steps {
                 script{
-                    if (TYPE == 'short') {
-                        sh 'composer test'
-                    } else if (TYPE == 'long') {
-                        sh 'composer check-full'
+                    switch (buildType) {
+                        case "long":
+                            sh 'composer check-full'
+                            break
+                        case default:
+                            sh 'composer test'
+                            break
                     }
                 }
             }
