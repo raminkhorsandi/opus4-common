@@ -54,12 +54,8 @@ pipeline {
                 cloverReportFileName: 'clover.xml'
             ])
             step([
-                $class: 'hudson.plugins.dry.DryPublisher',
-                pattern: 'build/pmd-cpd.xml'
-            ])
-            step([
                 $class: 'hudson.plugins.pmd.PmdPublisher',
-                pattern: 'build/pmd.xml'
+                pattern: 'build/phpmd.xml'
             ])
             sh "chmod -R 777 ."
             step([$class: 'WsCleanup', externalDelete: 'rm -rf *'])

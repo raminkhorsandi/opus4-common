@@ -13,8 +13,7 @@
   "require-dev": {
     "phpunit/phpunit": "4.8.24",
     "zendframework/zend-coding-standard": "~1.0.0",
-    "phpmd/phpmd": "@stable",
-    "phploc/phploc": "@stable"
+    "phpmd/phpmd": "@stable"
   },
   "autoload": {
     "psr-4": {
@@ -35,9 +34,8 @@
       "Composer\\Config::disableProcessTimeout",
       "@prepare",
       "@cs-report",
-      "@test-coverage",
       "@phpmd",
-      "@phploc"
+      "@test-coverage"
     ],
     "prepare": "mkdir -p build",
     "test": "phpunit --colors=always --log-junit build/phpunit.xml",
@@ -45,7 +43,6 @@
     "cs-check": "phpcs -n",
     "cs-report": "phpcs -n --report=checkstyle --report-file=build/checkstyle.xml",
     "cs-fix": "phpcbf",
-    "phpmd": "phpmd src xml cleancode,unusedcode,design,naming --reportfile build/phpmd.xml --ignore-violations-on-exit",
-    "phploc": "phploc --log-csv build/phploc.csv src"
+    "phpmd": "phpmd src xml cleancode,unusedcode,design,naming --reportfile build/phpmd.xml --ignore-violations-on-exit"
   }
 }
