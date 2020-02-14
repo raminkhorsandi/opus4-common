@@ -36,7 +36,6 @@
       "@prepare",
       "@cs-report",
       "@phpmd",
-      "@phploc",
       "@test-coverage"
     ],
     "prepare": "mkdir -p build",
