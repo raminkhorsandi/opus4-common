@@ -59,7 +59,7 @@ pipeline {
             ])
             step([
                 $class: 'SloccountPublisher',
-                pattern: 'build/phploc.csv'
+                pattern: 'build/phploc.xml'
             ])
             sh "chmod -R 777 ."
             step([$class: 'WsCleanup', externalDelete: 'rm -rf *'])

@@ -46,6 +46,6 @@
     "cs-report": "phpcs -n --report=checkstyle --report-file=build/checkstyle.xml",
     "cs-fix": "phpcbf",
     "phpmd": "phpmd src xml cleancode,unusedcode,design,naming --reportfile build/phpmd.xml --ignore-violations-on-exit",
-    "phploc": "phploc --log-csv build/phploc.csv src"
+    "phploc": "phploc --log-xml build/phploc.xml src"
   }
 }
