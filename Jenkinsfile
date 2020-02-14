@@ -57,6 +57,10 @@ pipeline {
                 $class: 'hudson.plugins.pmd.PmdPublisher',
                 pattern: 'build/phpmd.xml'
             ])
+            step([
+                $class: 'SloccountPublisher',
+                pattern: 'build/phploc.csv'
+            ])
             sh "chmod -R 777 ."
             step([$class: 'WsCleanup', externalDelete: 'rm -rf *'])
         }
