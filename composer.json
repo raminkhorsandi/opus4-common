@@ -30,15 +30,20 @@
       "@test"
     ],
     "check-full": [
+      "Composer\\Config::disableProcessTimeout",
       "@prepare",
       "@cs-report",
-      "@test-coverage"
+      "@test-coverage",
+      "@phpmd",
+      "@phploc"
     ],
     "prepare": "mkdir -p build",
     "test": "phpunit --colors=always --log-junit build/phpunit.xml",
-    "test-coverage": "phpunit --log-junit build/phpunit.xml --colors=always --coverage-html build/coverage/ --coverage-clover build/coverage/clover.xml",
+    "test-coverage": "phpunit --log-junit build/phpunit.xml --colors=always --coverage-html build/ --coverage-clover build/clover.xml",
     "cs-check": "phpcs -n",
     "cs-report": "phpcs -n --report=checkstyle --report-file=build/checkstyle.xml",
-    "cs-fix": "phpcbf"
+    "cs-fix": "phpcbf",
+    "phpmd": "phpmd src xml cleancode,unusedcode,design,naming --reportfile build/phpmd.xml --ignore-violations-on-exit",
+    "phploc": "phploc --log-csv build/phploc.csv src"
   }
 }
