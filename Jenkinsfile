@@ -32,6 +32,7 @@ pipeline {
                             break
                         default:
                             sh 'php composer.phar test'
+                            sh 'php composer.phar analyse'
                             break
                     }
                 }

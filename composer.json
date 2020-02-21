@@ -28,6 +28,8 @@
   },
   "scripts": {
     "check": [
+      "Composer\\Config::disableProcessTimeout",
+      "@prepare",
       "@cs-check",
       "@test"
     ],
@@ -37,6 +39,12 @@
       "@cs-report",
       "@phpmd",
       "@test-coverage"
+    ],
+    "analyse": [
+      "@prepare",
+      "Composer\\Config::disableProcessTimeout",
+      "@cs-report",
+      "@phpmd"
     ],
     "prepare": "mkdir -p build",
     "test": "phpunit --colors=always --log-junit build/phpunit.xml",
