@@ -119,6 +119,10 @@ interface StorageInterface
     /**
      * Returns all translations for a language.
      *
+     * This function is used by the OPUS 4 implementation of the Zend_Translate_Adapter in order to provide the
+     * translations stored in the database to the Zend translation mechanism. This is the only function necessary for
+     * that. All the other functions are for the management user interface.
+     *
      * @param null $module
      * @return mixed
      */
@@ -126,9 +130,25 @@ interface StorageInterface
 
     public function addTranslations($translations, $module = 'default');
 
+    /**
+     * Returns all translations.
+     *
+     * @return mixed
+     */
     public function getAll();
 
     public function renameKey($key, $newKey, $module = 'default');
 
+    /**
+     * @return mixed
+     *
+     * TODO replace getTranslations with this (interface should always provide module information)
+     */
     public function getTranslationsWithModules();
+
+    /**
+     * Returns the names of the modules with custom translations.
+     * @return mixed
+     */
+    public function getModules();
 }
