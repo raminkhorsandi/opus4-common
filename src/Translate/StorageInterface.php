@@ -144,7 +144,7 @@ interface StorageInterface
      *
      * TODO replace getTranslations with this (interface should always provide module information)
      */
-    public function getTranslationsWithModules();
+    public function getTranslationsWithModules($modules = null);
 
     /**
      * Returns the names of the modules with custom translations.
