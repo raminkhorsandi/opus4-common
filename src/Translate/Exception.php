@@ -35,6 +35,6 @@ namespace Opus\Translate;
 
 /**
  */
-class UnknownTranslationKey extends Exception
+class Exception extends \Exception
 {
 }
