@@ -85,4 +85,8 @@ abstract class AbstractPlugin implements PluginInterface
     public function postDelete($modelId)
     {
     }
+
+    public function postDeletePermanent($modelId)
+    {
+    }
 }

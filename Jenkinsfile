@@ -17,8 +17,9 @@ pipeline {
 
         stage('prepare') {
             steps {
-                sh 'composer install'
-                sh 'composer update'
+                sh 'curl -s http://getcomposer.org/installer | php && php composer.phar self-update && php composer.phar install'
+                sh 'sudo apt-get update'
+                sh 'pecl install xdebug-2.8.0 && echo "zend_extension=/usr/lib/php/20151012/xdebug.so" >> /etc/php/7.0/cli/php.ini'
             }
         }
 
@@ -27,34 +28,38 @@ pipeline {
                 script{
                     switch (buildType) {
                         case "long":
-                            sh 'composer check-full'
+                            sh 'php composer.phar check-full'
                             break
                         default:
-                            sh 'composer test'
+                            sh 'php composer.phar test'
+                            sh 'php composer.phar analyse'
                             break
                     }
                 }
             }
         }
-
-
-        stage('publish') {
-            steps {
-                step([
-                    $class: 'JUnitResultArchiver',
-                    testResults: 'build/phpunit.xml'
-                ])
-                step([
-                    $class: 'hudson.plugins.checkstyle.CheckStylePublisher',
-                    pattern: 'build/checkstyle.xml'
-                ])
-                step([
-                    $class: 'CloverPublisher',
-                    cloverReportDir: 'build/coverage/',
-                    cloverReportFileName: 'clover.xml'
-                ])
-                step([$class: 'WsCleanup'])
-            }
+    }
+    post {
+        always {
+            step([
+                $class: 'JUnitResultArchiver',
+                testResults: 'build/phpunit.xml'
+            ])
+            step([
+                $class: 'hudson.plugins.checkstyle.CheckStylePublisher',
+                pattern: 'build/checkstyle.xml'
+            ])
+            step([
+                $class: 'CloverPublisher',
+                cloverReportDir: 'build',
+                cloverReportFileName: 'clover.xml'
+            ])
+            step([
+                $class: 'hudson.plugins.pmd.PmdPublisher',
+                pattern: 'build/phpmd.xml'
+            ])
+            sh "chmod -R 777 ."
+            step([$class: 'WsCleanup', externalDelete: 'rm -rf *'])
         }
     }
 }
